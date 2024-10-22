@@ -8,7 +8,7 @@ import connectionDAO.ConnectionDAO;
 import eDTO.EbookDTO;
 import paperDTO.PaperDTO;
 
-public class ManagerDAO {
+public class ManagerDAO implements midao {
 	private ConnectionDAO cdao = ConnectionDAO.getInstance();
 	public static ManagerDAO mdao = null;
 	
@@ -40,10 +40,30 @@ public class ManagerDAO {
 		}
 	}
 	
+	public String pcodereturn(PaperDTO pdto) {
+		String pcode = null;
+		if(cdao.conn()) {
+			try {
+				String pcodeSql = "SELECT pcode FROM paperbook WHERE pname = ? AND pauthor = ? ORDER BY pcode ASC";
+				PreparedStatement psmt = cdao.conn.prepareStatement(pcodeSql);
+				psmt = cdao.conn.prepareStatement(pcodeSql);
+				psmt.setString(1, pdto.getPname());
+				psmt.setString(2, pdto.getPauthor());
+				ResultSet rs = psmt.executeQuery();
+				if (rs.next()) {
+					pcode = rs.getString("pcode");
+				}
+			} catch(SQLException e) {
+				
+			}
+		}
+		return pcode;
+	}
+	
 	public PaperDTO selectPaper(String selcode) {
 		if(cdao.conn()) {
 			try {
-				String sql="select * from paperbook where pcode = ?";
+				String sql="select * from paperbook where pcode = ? ORDER BY pcode ASC";
 				PreparedStatement psmt = cdao.conn.prepareStatement(sql);
 				psmt.setString(1, selcode);
 				ResultSet rs = psmt.executeQuery();

@@ -10,7 +10,7 @@ import eDTO.EbookDTO;
 import eReadDTO.EreadDTO;
 import orderedDTO.OrderedDTO;
 
-public class EbookDAO {
+public class EbookDAO implements Ebdao {
 	private ConnectionDAO cdao = ConnectionDAO.getInstance();
 	public static EbookDAO edao = null;
 	

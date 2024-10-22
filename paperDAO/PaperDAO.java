@@ -9,7 +9,7 @@ import connectionDAO.ConnectionDAO;
 import orderedDTO.OrderedDTO;
 import paperDTO.PaperDTO;
 
-public class PaperDAO {
+public class PaperDAO implements Pdbao {
 	private ConnectionDAO cdao = ConnectionDAO.getInstance();
 	public static PaperDAO pdao = null;
 	
@@ -26,6 +26,29 @@ public class PaperDAO {
 			try {
 				String sql = "select * from paperbook order by pcode asc";
 				PreparedStatement psmt = cdao.conn.prepareStatement(sql);
+				ResultSet rs = psmt.executeQuery();
+				while(rs.next()) {
+					PaperDTO pTemp = new PaperDTO();
+					pTemp.setPcode(rs.getString("pcode"));
+					pTemp.setPname(rs.getString("pname"));
+					pTemp.setPauthor(rs.getString("pauthor"));
+					pTemp.setPprice(rs.getInt("pprice"));
+					pTemp.setPquantity(rs.getInt("pquantity"));
+					plist.add(pTemp);
+				}
+			} catch(SQLException e) {e.printStackTrace();
+			}
+		}
+		return plist;
+	}
+	
+	public ArrayList<PaperDTO> oneSelect(String pname) {
+		ArrayList<PaperDTO> plist = new ArrayList<PaperDTO>();
+		if(cdao.conn()) {
+			try {
+				String sql = "select * from paperbook where pname LIKE ? order by pcode ASC";
+				PreparedStatement psmt = cdao.conn.prepareStatement(sql);
+				psmt.setString(1, "%" + pname + "%");
 				ResultSet rs = psmt.executeQuery();
 				while(rs.next()) {
 					PaperDTO pTemp = new PaperDTO();

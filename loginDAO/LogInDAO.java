@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import connectionDAO.ConnectionDAO;
 import customerDTO.CustomerDTO;
 
-public class LogInDAO {
+public class LogInDAO implements LgDbdao {
 	private ConnectionDAO cdao = ConnectionDAO.getInstance();
 	public static LogInDAO logdao = null;
-	
+
 	public static LogInDAO getInstance() {
 		if(logdao == null) {
 			logdao = new LogInDAO();
@@ -18,7 +18,7 @@ public class LogInDAO {
 		return logdao;
 	}
 
-	
+	@Override
 	public void signUp(CustomerDTO cd) {
 //		if (cd.getCid() == null || cd.getCid().trim().isEmpty()) {
 //			System.out.println("아이디를 입력하지 않으셨습니다.");
@@ -57,9 +57,10 @@ public class LogInDAO {
 		}
 	}
 	
-	public void duplicateId(String id) {
+	@Override
+	public boolean duplicateId(String id) {
+		boolean dup = true;
 		if(cdao.conn()) {
-			while(true) {
 				try {
 				String sql = "select count(*) from customer where cid = ?";
 					PreparedStatement psmt = cdao.conn.prepareStatement(sql);
@@ -68,18 +69,18 @@ public class LogInDAO {
 					
 					if(rs.next() && rs.getInt(1) > 0) {
 						System.out.println("중복된 아이디입니다. 다시 입력하세요.");
+						dup = true;
 					} else {
 						System.out.println("해당 아이디를 사용합니다.");
-						break;
+						dup = false;
 					}
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
-			} 
-		}
+		} return dup;
 	}
 	
+	@Override
 	public boolean logIn(String id, String pw) {
 		boolean valid = false;
 		if(cdao.conn()) {

@@ -1,11 +1,31 @@
 package main;
 
-import mainMenu.MainMenu;
+import ebookDAO.Ebdao;
+import ebookDAO.EbookDAO;
+import login.LoggingIn;
+import login.Logginginterface;
+import loginDAO.LgDbdao;
+import loginDAO.LogInDAO;
+import managerDAO.ManagerDAO;
+import managerDAO.midao;
+import menuFrame.MenuFrame;
+import orderedDTO.OrderedDTO;
+import paperDAO.PaperDAO;
+import paperDAO.Pdbao;
 
 public class Main {
 
 	public static void main(String[] args) {
-		new MainMenu();
+		LgDbdao dbdao = new LogInDAO();
+		Logginginterface lg = new LoggingIn();
+		Pdbao pdao = new PaperDAO();
+		Ebdao edao = new EbookDAO();
+		midao mdao = new ManagerDAO();
+		OrderedDTO odto = new OrderedDTO();
+		
+		//new MainMenu();
+		MenuFrame mf = new MenuFrame(dbdao, lg, pdao, edao, mdao, odto);
+		//ManagerpFrame mnf = new ManagerpFrame(dbdao, lg, pdao, edao, mdao);
 	}
 
 }
