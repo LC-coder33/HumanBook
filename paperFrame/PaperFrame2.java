@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -50,16 +52,17 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 	String realid = null;
 
 		private static final long serialVersionUID = 1L;
+		int inventory = 0;
 		private String pcode = null;
 		private JPanel contentPane;
 		private JTextField searchText;			
 		JTextField textpname = new JTextField();
-		JTextField textpquantity = new JTextField();
-		JButton backbtn = new JButton("뒤로가기");
+		JSpinner textpquantity = new JSpinner();
 		
 		DefaultTableModel porderedlist = null;
 		
 
+		JButton backbtn = new JButton("뒤로가기");
 		JButton searchbtn = new JButton("검색");			
 		JButton buybtn = new JButton("구매");			
 		JButton mypbtn = new JButton("내가 구매한 책 보기");
@@ -127,7 +130,7 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 				Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl",
 						"system","11111111");
 				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT pcode, pname, pauthor, pprice, pquantity FROM paperbook");
+				ResultSet rs = stmt.executeQuery("SELECT pcode, pname, pauthor, pprice, pquantity FROM paperbook Order by pcode ASC");
 				
 				while (rs.next()) {
 	                String pcode = rs.getString("pcode");
@@ -137,7 +140,7 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 	                int pquantity = rs.getInt("pquantity");
 
 	                // 모델에 데이터 추가
-	                porderedlist.addRow(new Object[] { pcode, pname, pauthor, pprice, pquantity });
+	                porderedlist.addRow(new Object[] { pcode, pname, pauthor, String.format("%,.0f원", pprice), pquantity});
 	            }
 				rs.close();
 				stmt.close();
@@ -179,7 +182,7 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 			center_pcc.add(pquantity);
 			
 			center_pcc.add(textpquantity);
-			textpquantity.setColumns(5);
+			textpquantity.setPreferredSize(new Dimension(50,20));
 
 			center_pcc.add(buybtn);
 			buybtn.addActionListener(this);
@@ -242,7 +245,8 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 				ArrayList<PaperDTO> results = pbao.oneSelect(namep);
 				porderedlist.setRowCount(0);
 				for (PaperDTO paper : results) {
-				    porderedlist.addRow(new Object[] { paper.getPcode(), paper.getPname(), paper.getPauthor(), paper.getPprice(), paper.getPquantity() });
+				    porderedlist.addRow(new Object[] { paper.getPcode(), paper.getPname(), 
+				    		paper.getPauthor(), paper.getPprice(), paper.getPquantity() });
 				}
 				contentPane.revalidate();
 				contentPane.repaint();
@@ -251,14 +255,18 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 			if(e.getSource() == buybtn && lg.isloggedIn() == true) {
 				String pcode2 = pcode;
 				String pname = textpname.getText();
-				int quantity = Integer.parseInt(textpquantity.getText());
-				odto = new OrderedDTO();
-				odto.setCid(mf.getRealid());
-				odto.setPcode(pcode2);
-				odto.setBname(pname);
-				odto.setQuantity(quantity);
-				pbao.insert(odto);
-				howmuch.setText("총 " + odto.getQuantity() + "권 구매하셨습니다.");
+				int quantity = Integer.parseInt(String.valueOf(textpquantity.getValue()));
+				if(inventory<quantity) {
+					howmuch.setText("재고가 부족합니다.");
+				} else {
+					odto = new OrderedDTO();
+					odto.setCid(mf.getRealid());
+					odto.setPcode(pcode2);
+					odto.setBname(pname);
+					odto.setQuantity(quantity);
+					pbao.insert(odto);
+					howmuch.setText("총 " + odto.getQuantity() + "권 구매하셨습니다.");
+					}
 				contentPane.revalidate();
 				contentPane.repaint();
 				
@@ -284,15 +292,18 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 			
 			if(e.getSource() == backbtn) {
 				this.dispose();
-				setBounds(100,100,1080,720);
-				mf = new MenuFrame(ldbao, lg, pbao, edao, mdao, odto);
-				mf.setVisible(true);
-				mf.returnedcustomer();
+//				setBounds(100,100,1080,720);
+//				mf = new MenuFrame(ldbao, lg, pbao, edao, mdao, odto);
+//				mf.setVisible(true);
+//				mf.returnedcustomer();
 			}
 			
-			if(e.getSource() == mypbtn) {
+			if(e.getSource() == mypbtn && realid != null) {
 				pc = new PaperCus(pbao, odto, this);
 				pc.setVisible(true);
+			} else if(e.getSource() == mypbtn && realid == null) {
+				JOptionPane.showMessageDialog(this, "로그인 후 이용하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+		    	return;
 			}
 		}
 
@@ -303,6 +314,8 @@ public class PaperFrame2 extends JFrame implements ActionListener, MouseListener
 				JTable table = (JTable) e.getSource();
 				int selrow = table.getSelectedRow();
 				pcode = String.valueOf(table.getValueAt(selrow, 0));
+				inventory = Integer.parseInt(String.valueOf(table.getValueAt(selrow, 4)));
+				//  str = str.substring(0, str.length() - 1);
 				String pname = String.valueOf(table.getValueAt(selrow, 1));
 				textpname.setText(pname);
 			}

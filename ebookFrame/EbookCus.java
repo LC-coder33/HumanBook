@@ -1,4 +1,4 @@
-package paperFrame;
+package ebookFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,25 +14,25 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import ebookDAO.Ebdao;
 import orderedDTO.OrderedDTO;
-import paperDAO.Pdbao;
 
-public class PaperCus extends JFrame implements ActionListener {
+public class EbookCus extends JFrame implements ActionListener {
 
-	Pdbao pdao = null;
+	Ebdao edao = null;
 	OrderedDTO odto = null;
 	DefaultTableModel mypage = null;
 	private JTable mytable = null;
 	String realid = null;
 	
-	JButton out = new JButton("나가기");
+JButton out = new JButton("나가기");
 	
 	private JPanel contentPane = new JPanel();
 	
-	public PaperCus(Pdbao pdao, OrderedDTO odto, PaperFrame2 pf) {
-		this.pdao = pdao;
+	public EbookCus(Ebdao edao, OrderedDTO odto, EbookFrame ef) {
+		this.edao = edao;
 		this.odto = odto;
-		realid = pf.getRealid();
+		realid = ef.getRealid();
 		
 		setBounds(100,100, 720, 480);
 		contentPane.setBackground(Color.WHITE);
@@ -44,7 +44,7 @@ public class PaperCus extends JFrame implements ActionListener {
 		contentPane.add(northP, BorderLayout.NORTH);
 		northP.setBackground(Color.WHITE);
 		northP.setLayout(new BorderLayout());
-		JLabel m = new JLabel("도서 마이페이지");
+		JLabel m = new JLabel("이북 마이페이지");
 		northP.add(m);
 		
 		JPanel centerP = new JPanel();
@@ -60,32 +60,29 @@ public class PaperCus extends JFrame implements ActionListener {
 			new String[] {"주문 번호","아이디","도서 코드","도서 제목","주문 수량","총 가격"}
 		);
 		
-		
 		String cid = realid;
-		ArrayList<OrderedDTO> orders = pdao.selectOne(cid);
-		    for (OrderedDTO order : orders) {
-		        mypage.addRow(new Object[]{
-		            order.getTid(), 
-		            order.getCid(), 
-		            order.getPcode(), 
-		            order.getBname(), 
-		            order.getQuantity(), 
-		            order.getFullprice()+"원"
-		        });
-		    }
-		    mytable = new JTable(mypage);
-		    JScrollPane scrollPane = new JScrollPane(mytable);
-		    contentPane.add(scrollPane, BorderLayout.CENTER);
+		ArrayList<OrderedDTO> orders = edao.selectOne(cid);
+	    for (OrderedDTO order : orders) {
+	        mypage.addRow(new Object[]{
+	            order.getTid(), 
+	            order.getCid(), 
+	            order.getEcode(), 
+	            order.getBname(), 
+	            order.getQuantity(), 
+	            order.getFullprice()+"원"
+	        });
+	    }
+	    mytable = new JTable(mypage);
+	    JScrollPane scrollPane = new JScrollPane(mytable);
+	    contentPane.add(scrollPane, BorderLayout.CENTER);
 
-		    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == out) {
 			this.dispose();
 		}
 	}
-	
-	
 }

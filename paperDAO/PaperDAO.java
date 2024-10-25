@@ -113,8 +113,8 @@ public class PaperDAO implements Pdbao {
 				
 				 String sqlUpdate = "UPDATE paperbook SET pquantity = pquantity - ? WHERE pcode = ?";
 		            PreparedStatement psmtUpdate = cdao.conn.prepareStatement(sqlUpdate);
-		            psmtUpdate.setInt(1, odto.getQuantity()); // 구매한 수량
-		            psmtUpdate.setString(2, odto.getPcode()); // 책 코드
+		            psmtUpdate.setInt(1, odto.getQuantity());
+		            psmtUpdate.setString(2, odto.getPcode());
 		            int resultUpdate = psmtUpdate.executeUpdate();
 				if(resultInt > 0) {
 					cdao.conn.commit();

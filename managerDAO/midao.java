@@ -13,4 +13,5 @@ public interface midao {
 	public EbookDTO selectEbook(String selecode);
 	public void emod(EbookDTO edto);
 	public void edel(String delecode);
+	public String ecodereturn(EbookDTO edto);
 }

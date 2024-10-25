@@ -32,11 +32,13 @@ public class LogInDAO implements LgDbdao {
 //		    }	당장은 쓸 필요 x
 		if(cdao.conn()) {
 			try {
-				String sql = "insert into customer values (?,?,?)";
+				String sql = "insert into customer values (?,?,?,?,?)";
 				PreparedStatement psmt = cdao.conn.prepareStatement(sql);
 				psmt.setString(1, cd.getCid());
 				psmt.setString(2, cd.getCname());
 				psmt.setString(3, cd.getCpassword());
+				psmt.setString(4, cd.getCquestion());
+				psmt.setString(5, cd.getCanswer());
 				int resultInt = psmt.executeUpdate();
 				if(resultInt == 0) {
 					cdao.conn.rollback();

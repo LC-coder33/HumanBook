@@ -234,4 +234,24 @@ public class ManagerDAO implements midao {
 			}
 		}
 	}
+	
+	public String ecodereturn(EbookDTO edto) {
+		String ecode = null;
+		if(cdao.conn()) {
+			try {
+				String ecodeSql = "SELECT ecode FROM ebook WHERE ename = ? AND eauthor = ? ORDER BY ecode ASC";
+				PreparedStatement psmt = cdao.conn.prepareStatement(ecodeSql);
+				psmt = cdao.conn.prepareStatement(ecodeSql);
+				psmt.setString(1, edto.getEname());
+				psmt.setString(2, edto.getEauthor());
+				ResultSet rs = psmt.executeQuery();
+				if (rs.next()) {
+					ecode = rs.getString("ecode");
+				}
+			} catch(SQLException e) {
+				
+			}
+		}
+		return ecode;
+	}
 }

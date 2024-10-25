@@ -9,13 +9,11 @@ import loginDAO.LogInDAO;
 import managerAccess.ManagerAccess;
 import managerMenu.ManagerMenu;
 import paperMge.PaperMge;
-import usedMge.UsedMge;
 
 public class MainMenu {
 	CustomerDTO cd = null;
 	private PaperMge pmge = null;
 	private EbookMge emge = null;
-	private UsedMge umge = null;
 	private ManagerMenu mMenu = null;
 	private LoggingIn lg = null;
 	private ManagerAccess ma = null;
@@ -29,9 +27,6 @@ public class MainMenu {
 		}
 		if(emge == null) {
 			emge = new EbookMge(lg);
-		}
-		if(umge == null) {
-			umge = new UsedMge();
 		}
 		if(mMenu == null) {
 			mMenu = new ManagerMenu();
@@ -61,7 +56,7 @@ public class MainMenu {
 			case 3: mgeLogin(); break;
 			case 4: pmge.menu(); break;
 			case 5: emge.menu(); break;
-			case 6: umge.menu(); break;
+			case 6: break;
 			case 7: if(lg.isManager()) {
 				mMenu.menu(); break;
 				} else {

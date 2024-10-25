@@ -61,7 +61,7 @@ public class EbookMge {
 		EreadDTO erdto = new EreadDTO();
 		erdto.setCeid(lg.getId());
 		erdto.setEcode(ecode);
-		edao.cinsert(erdto);
+		// edao.cinsert(erdto);
 		
 	}
 	

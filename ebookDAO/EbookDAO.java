@@ -42,6 +42,58 @@ public class EbookDAO implements Ebdao {
 		}
 		return elist;
 	}
+	
+	public ArrayList<EbookDTO> oneSelect(String ename) {
+		ArrayList<EbookDTO> elist = new ArrayList<EbookDTO>();
+		if(cdao.conn()) {
+			try {
+				String sql = "select * from ebook where ename LIKE ? order by ecode ASC";
+				PreparedStatement psmt = cdao.conn.prepareStatement(sql);
+				psmt.setString(1, "%" + ename + "%");
+				ResultSet rs = psmt.executeQuery();
+				while(rs.next()) {
+					EbookDTO eTemp = new EbookDTO();
+					eTemp.setEcode(rs.getString("ecode"));
+					eTemp.setEname(rs.getString("ename"));
+					eTemp.setEauthor(rs.getString("eauthor"));
+					eTemp.setEprice(rs.getInt("eprice"));
+					eTemp.setEpage(rs.getInt("epage"));
+					elist.add(eTemp);
+				}
+			} catch(SQLException e) {e.printStackTrace();
+			}
+		}
+		return elist;
+	}
+	
+	public ArrayList<OrderedDTO> selectOne(String cid) {
+		ArrayList<OrderedDTO> olist = new ArrayList<OrderedDTO>();
+		if(cdao.conn()) {
+			try {
+				String sql = 
+				"select * from ordered where cid = ? AND ecode is not null";
+				PreparedStatement psmt = cdao.conn.prepareStatement(sql);
+				psmt.setString(1, cid);
+				ResultSet rs = psmt.executeQuery();
+				while(rs.next()) {
+					OrderedDTO oTemp = new OrderedDTO();
+					oTemp.setTid(rs.getString("tid"));
+					oTemp.setCid(rs.getString("cid"));
+					oTemp.setPcode(rs.getString("pcode"));
+					oTemp.setEcode(rs.getString("ecode"));
+					oTemp.setUcode(rs.getString("ucode"));
+					oTemp.setBname(rs.getString("bname"));
+					oTemp.setQuantity(rs.getInt("quantity"));
+					oTemp.setFullprice(rs.getInt("fullprice"));
+					olist.add(oTemp);
+				}
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return olist;
+	}
+	
 	public void insert(OrderedDTO odto) {
 		if(cdao.conn()) {
 			try {

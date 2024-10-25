@@ -12,33 +12,34 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import customerDTO.CustomerDTO;
+import eDTO.EbookDTO;
+import ebookDAO.Ebdao;
 import managerDAO.midao;
 import menuFrame.MenuFrame;
 import orderedDTO.OrderedDTO;
 import paperDAO.Pdbao;
-import paperDTO.PaperDTO;
 
-public class ManagerModFrame extends JFrame implements ActionListener {
+public class ManagereModFrame extends JFrame implements ActionListener {
 	MenuFrame mframe = null;
-	ManagerpFrame mpframe = null;
+	ManagereFrame meframe = null;
 	OrderedDTO odto = null;
 	CustomerDTO cdto = null;
 	Pdbao pdao = null;
 	midao mdao = null;
 	
-	private String pcode = null;
+	private String ecode = null;
 	
 	private JPanel contentPane;
 	private JTextField name;
 	private JTextField author;
 	private JTextField price;
-	private JTextField quantity;
+	private JTextField page;
 	
 	JButton modbtn2 = new JButton("수정하기");
 	
-	public ManagerModFrame(ManagerpFrame mpframe, Pdbao pb, midao mdao, String pcode, String pname2, String pauthor2, double pprice2, int pquantity2) {
-		this.mpframe = mpframe;
-		this.pcode = pcode;
+	public ManagereModFrame(ManagereFrame meframe, Ebdao edao, midao mdao, String ecode, String ename2, String eauthor2, double eprice2, int epage2) {
+		this.meframe = meframe;
+		this.ecode = ecode;
 		this.mdao = mdao;
 		setBounds(430, 300, 450, 300);
 		contentPane = new JPanel();
@@ -56,31 +57,31 @@ public class ManagerModFrame extends JFrame implements ActionListener {
 		contentPane.add(center_p, BorderLayout.CENTER);
 		center_p.setLayout(new GridLayout(4, 2, -100, 10));
 		
-		JLabel pname = new JLabel("책 제목: ");
-		center_p.add(pname);
+		JLabel ename = new JLabel("책 제목: ");
+		center_p.add(ename);
 		
 		name = new JTextField();
 		center_p.add(name);
 		
-		JLabel pauthor = new JLabel("작가명: ");
-		center_p.add(pauthor);
+		JLabel eauthor = new JLabel("작가명: ");
+		center_p.add(eauthor);
 		
 		author = new JTextField();
 		center_p.add(author);
 		
-		JLabel pprice = new JLabel("가격: ");
-		center_p.add(pprice);
+		JLabel eprice = new JLabel("가격: ");
+		center_p.add(eprice);
 		
 		price = new JTextField();
 		center_p.add(price);
 		price.setColumns(10);
 		
-		JLabel pquantity = new JLabel("재고: ");
-		center_p.add(pquantity);
+		JLabel epage = new JLabel("총 페이지 수: ");
+		center_p.add(epage);
 		
-		quantity = new JTextField();
-		center_p.add(quantity);
-		quantity.setColumns(10);
+		page = new JTextField();
+		center_p.add(page);
+		page.setColumns(10);
 		
 		
 		JPanel south_p = new JPanel();
@@ -103,27 +104,28 @@ public class ManagerModFrame extends JFrame implements ActionListener {
 		if(e.getSource() == modbtn2) {
 			String modname = name.getText();
 			String modauthor = author.getText();
-			double modprice = Integer.parseInt(price.getText());
-			int modquantity = Integer.parseInt(quantity.getText());
-			PaperDTO pdto = new PaperDTO();
-			pdto.setPcode(pcode);
-			pdto.setPname(modname);
-			pdto.setPauthor(modauthor);
-			pdto.setPprice((int)modprice);
-			pdto.setPquantity(modquantity);
+			int modprice = Integer.parseInt(price.getText());
+			int modepage = Integer.parseInt(page.getText());
+			EbookDTO edto = new EbookDTO();
+			edto.setEcode(ecode);
+			edto.setEname(modname);
+			edto.setEauthor(modauthor);
+			edto.setEprice((int)modprice);
+			edto.setEpage(modepage);
 			
-			mdao.pmod(pdto);
+			mdao.emod(edto);
 			
-			int selectedRow = mpframe.pordered.getSelectedRow();
-	        mpframe.getPorderedlist().setValueAt(modname, selectedRow, 1);
-	        mpframe.getPorderedlist().setValueAt(modauthor, selectedRow, 2);
-	        mpframe.getPorderedlist().setValueAt(modprice, selectedRow, 3);
-	        mpframe.getPorderedlist().setValueAt(modquantity, selectedRow, 4);
-	        mpframe.getPorderedlist().fireTableDataChanged();
-			mpframe.pordered.repaint();
+			int selectedRow = meframe.eordered.getSelectedRow();
+	        meframe.getEorderedlist().setValueAt(modname, selectedRow, 1);
+	        meframe.getEorderedlist().setValueAt(modauthor, selectedRow, 2);
+	        meframe.getEorderedlist().setValueAt(modprice, selectedRow, 3);
+	        meframe.getEorderedlist().setValueAt(modepage, selectedRow, 4);
+	        meframe.getEorderedlist().fireTableDataChanged();
+			meframe.eordered.repaint();
 			this.dispose();
-			mpframe.setVisible(true);
+			meframe.setVisible(true);
 			
 		}
+		
 	}
 }

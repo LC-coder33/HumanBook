@@ -6,6 +6,7 @@ import login.LoggingIn;
 import login.Logginginterface;
 import loginDAO.LgDbdao;
 import loginDAO.LogInDAO;
+import managerAccess.ManagerAccess;
 import managerDAO.ManagerDAO;
 import managerDAO.midao;
 import menuFrame.MenuFrame;
@@ -22,9 +23,10 @@ public class Main {
 		Ebdao edao = new EbookDAO();
 		midao mdao = new ManagerDAO();
 		OrderedDTO odto = new OrderedDTO();
+		ManagerAccess ma = new ManagerAccess();
 		
 		//new MainMenu();
-		MenuFrame mf = new MenuFrame(dbdao, lg, pdao, edao, mdao, odto);
+		MenuFrame mf = new MenuFrame(dbdao, lg, pdao, edao, mdao, odto, ma);
 		//ManagerpFrame mnf = new ManagerpFrame(dbdao, lg, pdao, edao, mdao);
 	}
 
